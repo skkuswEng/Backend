@@ -1,17 +1,18 @@
 # Backend Directory
-
 This directory is for backend.
----
+
 ## 데이터베이스 생성 및 연결
 
+
 현재 **database서버**는 로컬에서 만들어서 돌리고 있습니다. test시에는 각자 로컬에서 MySQL 서버 실행 후 접속 바랍니다. 데이터베이스 연결 로직은 **database.py**와 **db_config.py**를 참고해 주시면 됩니다. (**db_config**는 **.gitignore** 되기 때문에 직접 만들어야 할 수도 있음 ==> 데이터베이스 생성 시, E-R Diagram 참고하면서 만들 것!)
----
+
+
 ## 필요한 pip 패키지 설치
 
 ```linux
 pip install -r requirements.txt
 ```
----
+
 ## 서버 돌리기
 
 Backend 서버를 돌리려면 backend 디렉토리로 들어 간 후 다음 명령어를 입력합니다.
