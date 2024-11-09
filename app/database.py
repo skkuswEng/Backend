@@ -1,7 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 from contextlib import contextmanager
-
 from app.secure.db_config import db_config
 
 Base = declarative_base()
@@ -32,22 +31,14 @@ class Database:
             print(f"An error occurred when trying to connect to database {db_config['database']}: {str(e)}")
             raise
 
-    @contextmanager
-    def get_db(self):
-        # 세션 생성 및 관리
-        SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=self.engine)
-        db = SessionLocal()
-        try:
-            yield db
-        finally:
-            db.close()
-
-    def get_engine(self):
-        return self.engine
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_value, traceback):
-        # 리소스 해제 (현재 특별한 해제가 필요하지 않음)
-        pass
+    
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=Database().engine)
+    
+def get_db():
+    # 세션 생성 및 관리
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+      
