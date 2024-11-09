@@ -1,14 +1,21 @@
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.staticfiles import StaticFiles
 
+from backend.app.handlers.handler import register_exception_handlers
+
+from app.routers import user_router
+
 app = FastAPI()
 
 # Favicon Static
 # Get rid of favicon.ico 404 Not Found error
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
+# handlers
+register_exception_handlers(app)
+
 # routers
-# app.include_router(router_name)
+app.include_router(user_router)
 
 # root router for testing
 @app.get('/')
