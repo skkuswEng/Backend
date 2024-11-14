@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import JSONResponse
 
 from app.schemas.user.request import LoginRequest, SignUpRequest
-from app.schemas.user.response import LoginResponse, SignUpResponse
+from app.schemas.user.response import LoginResponse, SignUpResponse, LoginResponseData
 
 from backend.app.handlers.handler import LoginError
 
@@ -21,9 +21,11 @@ async def login(request: LoginRequest):
         # 사용자 정보가 DB에 있음
         return LoginResponse(
             status="success",
-            message="Successfully Logged in"
+            message="Successfully Logged in",
+            content=LoginResponseData
         )
     
+
 @router.post("/user/register", response_model=SignUpResponse)
 async def signup(request: SignUpRequest):
     # 회원가입 성공여부

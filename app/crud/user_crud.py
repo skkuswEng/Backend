@@ -32,6 +32,7 @@ def check_duplicate_user(id: str):
     return user_df
 
 # 일단 is_admin은 무조건 False로 박아버리긔 ~
+# SHA-256
 def user_signup(user_data: dict):
     # 이미 회원가입 되어 있는 유저이면 오류 발생
     # 아이디 Front로 넘겨서 가입되어 있는 아이디 보내주는 것 좋다고 봄(추후 해보자)
