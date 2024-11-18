@@ -1,9 +1,9 @@
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.staticfiles import StaticFiles
 
-from backend.app.handlers.handler import register_exception_handlers
+from .handlers.handler import register_exception_handlers
 
-from app.routers import user_router
+from .routers.user_router import router as user_router
 
 app = FastAPI()
 

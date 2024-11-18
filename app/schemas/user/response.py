@@ -1,8 +1,9 @@
+from pydantic import BaseModel
 from app.schemas.base_schema import ResponseModel
 from typing import Optional
 
 # Login
-class LoginResponseData():
+class LoginResponseData(BaseModel):
     student_id: str
     name: str
 

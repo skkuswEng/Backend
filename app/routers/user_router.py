@@ -1,12 +1,12 @@
 from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import JSONResponse
 
-from app.schemas.user.request import LoginRequest, SignUpRequest, UnregisterRequest
-from app.schemas.user.response import LoginResponse, SignUpResponse, LoginResponseData, UnregisterResponse
+from ..schemas.user.request import LoginRequest, SignUpRequest, UnregisterRequest
+from ..schemas.user.response import LoginResponse, SignUpResponse, LoginResponseData, UnregisterResponse
 
-from backend.app.handlers.handler import UserError
+from ..handlers.handler import UserError
 
-from app.crud.user_crud import user_login, user_signup, user_unregister
+from ..crud.user_crud import user_login, user_signup, user_unregister
 
 router = APIRouter()
 
