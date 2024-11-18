@@ -7,10 +7,13 @@ class LoginResponseData():
     name: str
 
 class LoginResponse(ResponseModel):
-    status: str
     message: str
+    content: LoginResponseData
 
 # Sign up
 class SignUpResponse(ResponseModel):
-    status: str
     message: str 
+
+# Unregister
+class UnregisterResponse(ResponseModel):
+    message: str
