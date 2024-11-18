@@ -21,7 +21,10 @@ async def login(request: LoginRequest):
         # 사용자 정보가 DB에 있음
         return LoginResponse(      
             message="로그인 성공",
-            content=LoginResponseData
+            content=LoginResponseData(
+                student_id=request.student_id,
+                name=str(user_df.name)
+            )
         )
     
 
