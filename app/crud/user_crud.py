@@ -104,7 +104,7 @@ def user_unregister(user_data: dict):
         # 비밀번호가 틀림
         return {
             "result": False,
-            "error": "비밀번호가 틀립니다."
+            "error": "비밀번호가 틀립니다"
         }
     
     # 사용자 삭제
