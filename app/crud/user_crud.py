@@ -17,6 +17,7 @@ def user_login(id: str, password: str):
     hashed_password = hash_password(password)
     params = (id, hashed_password)
     user_df = pd.read_sql(query, engine, params=params)
+    # print(user_df.name[0])
     return user_df
 
 # 회원가입

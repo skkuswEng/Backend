@@ -23,7 +23,7 @@ async def login(request: LoginRequest):
             message="로그인 성공",
             content=LoginResponseData(
                 student_id=request.student_id,
-                name=str(user_df.name)
+                name=user_df.name[0]
             )
         )
     
