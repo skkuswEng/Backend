@@ -5,6 +5,7 @@ from typing import List, Optional
 # Response Data
 class SeatListData(BaseModel):
     seat_list: list[bool]
+    
 class ReservedSeatData(BaseModel):
     seat_number: int
     

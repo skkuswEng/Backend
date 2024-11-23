@@ -9,40 +9,40 @@ engine = Database().get_engine()
 
 def getSeatData():
     query = """
-        SELET *
+        SELECT *
         FROM Seat;
     """
-    seat_df = pd.read_sql(query, enginge )
+    seat_df = pd.read_sql(query, engine )
     return seat_df
 
 def getSelectedSeatData(seat_number: int ):
     query = """
-        SELET * 
+        SELECT * 
         FROM Seat
-        WHERE seat_number = %d;
+        WHERE seat_number = %s;
     """
-    params = (seat_number)
+    params = (seat_number, )
     seat_df = pd.read_sql( query, engine, params=params )
 
     return seat_df
 
 def getUserRoomReservation( student_id: str ):
-    qeury = """
+    query = """
         SELECT *
-        FROM Reservatoin
+        FROM Reservation
         WHERE student_id = %s;
     """
-    params = (student_id )
+    params = (student_id, )
     room_reservation_df = pd.read_sql( query, engine, params=params )
     return room_reservation_df
 
 def getUserSeatReservation( student_id: str ):
-    qeury = """
+    query = """
         SELECT *
         FROM Seat
         WHERE  student_id = %s;
     """
-    params = (student_id)
+    params = (student_id, )
     seat_reservation_df = pd.read_sql( query, engine, params=params)
     return seat_reservation_df
 
@@ -63,7 +63,7 @@ def UnreserveSeat( seat_number: int ):
             """
             session.execute(
                 text(unreserve_query),
-                {"seat_number": seat_number }}
+                {"seat_number": seat_number }
             )
             sessoin.commit()
         except Exception as e:

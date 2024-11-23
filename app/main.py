@@ -5,6 +5,7 @@ from starlette.middleware.cors import CORSMiddleware
 from .handlers.handler import register_exception_handlers
 
 from .routers.user_router import router as user_router
+from .routers.seat_router import router as seat_router 
 
 app = FastAPI()
 
@@ -30,6 +31,7 @@ register_exception_handlers(app)
 
 # routers
 app.include_router(user_router)
+app.include_router(seat_router)
 
 # root router for testing
 @app.get('/')
