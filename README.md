@@ -78,8 +78,9 @@ CREATE TABLE Reservation (
 -- Seat 테이블 생성
 CREATE TABLE Seat (
     seat_number INT NOT NULL,
-    student_id CHAR(10) NOT NULL,
-    time DATETIME NOT NULL,
+    student_id CHAR(10), 
+    time DATETIME,
+    is_reserved BOOLEAN NOT NULL, 
     PRIMARY KEY (seat_number),
     FOREIGN KEY (student_id) REFERENCES User(student_id)
 );
