@@ -81,6 +81,7 @@ CREATE TABLE Seat (
     student_id CHAR(10), 
     time DATETIME,
     is_reserved BOOLEAN NOT NULL, 
+    count INT NOT NULL,
     PRIMARY KEY (seat_number),
     FOREIGN KEY (student_id) REFERENCES User(student_id)
 );
