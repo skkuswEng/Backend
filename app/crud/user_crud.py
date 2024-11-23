@@ -24,20 +24,21 @@ def user_login(id: str, password: str):
 # 이미 회원가입 한 유저인지 확인
 def check_duplicate_user(id: str):
     query = """
-    SELECT * FROM User
+    SELECT COUNT(*) AS count 
+    FROM User
     WHERE student_id = %s
     """
 
     params = (id, )
     user_df = pd.read_sql(query, engine, params=params)
 
-    return user_df
+    return user_df['count'].iloc[0]
 
 # 일단 is_admin은 무조건 False로 박아버리긔 ~
 def user_signup(user_data: dict):
     # 이미 회원가입 되어 있는 유저이면 오류 발생
     # 아이디 Front로 넘겨서 가입되어 있는 아이디 보내주는 것 좋다고 봄(추후 해보자)
-    if not check_duplicate_user(user_data.student_id).empty:
+    if check_duplicate_user(user_data.student_id) > 0:
         return {
             "result": False,
             "error": "이미 회원가입 되어있는 학번입니다"
