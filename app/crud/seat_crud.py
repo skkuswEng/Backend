@@ -5,6 +5,7 @@ from sqlalchemy import text
 import pandas as pd
 
 from app.utils.functions import hash_password
+from datetime import datetime, timedelta
 engine = Database().get_engine()
 
 def getSeatData():
@@ -26,11 +27,11 @@ def getSelectedSeatData(seat_number: int ):
 
     return seat_df
 
-def getUserRoomReservation( student_id: str ):
+def getUserRoomReservation( student_id: str, reservation_date: datetime ):
     query = """
         SELECT *
         FROM Reservation
-        WHERE student_id = %s;
+        WHERE student_id = %s
     """
     params = (student_id, )
     room_reservation_df = pd.read_sql( query, engine, params=params )
@@ -47,9 +48,39 @@ def getUserSeatReservation( student_id: str ):
     return seat_reservation_df
 
 def reserveSeat( student_id: str, seat_number: int, reservation_date: str):
-    return True
+    with Session(engine) as session:
+        try:
+            reserve_query = """
+                UPDATE Seat
+                SET
+                    student_id = :student_id,
+                    time = :reservation_date,
+                    is_reserved = TRUE
+                WHERE
+                    seat_number = :seat_number;
+            """
+            session.execute(
+                text(reserve_query),
+                {
+                    "student_id": student_id, 
+                    "reservation_date": reservation_date,
+                    "seat_number": seat_number 
+                }
+            )
+            session.commit()
+            
+            return {
+                "result": True,
+                "message": "좌석 배정 성공"
+            }
+        except Exception as e:
+            session.rollback()
+            return {
+                "result" : False,
+                "error": f"좌석 배정 중 에러 발생: {str(e)}"
+            }
     
-def UnreserveSeat( seat_number: int ):
+def unreserveSeat( seat_number: int ):
     with Session(engine) as session:
         try:
             unreserve_query = """
@@ -65,16 +96,15 @@ def UnreserveSeat( seat_number: int ):
                 text(unreserve_query),
                 {"seat_number": seat_number }
             )
-            sessoin.commit()
+            session.commit()
+            return {
+                "result": True,
+                "message" : "좌석 반납 성공"
+            }
         except Exception as e:
             session.rollback()
             return{
                 "result": False,
                 "error": f"좌석 반납 중 에러 발생: {str(e)}"
             }
-        
-        return {
-            "result": True,
-            "message" : "좌석 반납 성공"
-        }
             
