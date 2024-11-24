@@ -33,18 +33,18 @@ async def ReserveSeat(request: ReserveSeatRequest ):
     reservation_date = datetime.strptime( request.reservation_date, "%Y-%m-%d %H:%M")
     # get selected seat from DB
     seat_df = getSelectedSeatData(request.seat_number)
-    room_reservation_df = getUserRoomReservation( request.student_id, reservation_date )#시간 체크 구현 필요
+    room_reservation_df = getUserRoomReservation( request.student_id, reservation_date ) #시간 체크 구현 필요
     seat_reservation_df = getUserSeatReservation( request.student_id )
     # reponse
     if seat_df.empty: 
-        raise HTTPException( status_code=404, detail="요청한 seat_number가 존재하지 않습니다")
+        raise HTTPException( status_code=404, detail="요청한 seat_number가 존재하지 않습니다") # 확인
     else :
         if seat_df["is_reserved"].any() == True :
-            raise HTTPException( status_code=409, detail="이미 배정된 좌석입니다")
+            raise HTTPException( status_code=409, detail="이미 배정된 좌석입니다") #확인
         if room_reservation_df.empty == False :
-            raise HTTPException( status_code=409, detail="이미 해당 시간에 스터디룸 예약한 상황입니다")
+            raise HTTPException( status_code=409, detail="이미 해당 시간에 스터디룸 예약한 상황입니다") # check 필요
         if seat_reservation_df.empty == False :
-            raise HTTPException(status_code=409, detail="이미 다른 좌석을 예약한 상황입니다.")
+            raise HTTPException(status_code=409, detail="이미 다른 좌석을 예약한 상황입니다.") #확인
 
         result = reserveSeat( request.student_id, request.seat_number, request.reservation_date )
         
@@ -79,7 +79,9 @@ async def UnreserveSeat( request: UnreserveSeatRequest ):
     if seat_reservation_df.empty == True :
         raise HTTPException( status_code=409, detail="해당 유저가 예약한 좌석이 없습니다.")
     
-    if seat_reservation_df.seat_number.any() == request.seat_number :
+    #print( "df: ", int( seat_reservation_df.seat_number ) )
+    #print( "req: ", request.seat_number )
+    if int(seat_reservation_df.seat_number) == request.seat_number :
         result = unreserveSeat( request.seat_number )
         if result == False :
             raise HTTPException(status_code=409, detail="좌석 반납중 서버 DB에서 에러 발생")
