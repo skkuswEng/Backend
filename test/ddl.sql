@@ -11,7 +11,8 @@ CREATE TABLE Studyroom (
     idx INT AUTO_INCREMENT,
     student_id CHAR(10) NOT NULL,
     room_number INT NOT NULL,
-    time DATETIME NOT NULL,
+    start_time DATETIME NOT NULL,
+    end_time DATETIME NOT NULL,
     PRIMARY KEY (idx),
     FOREIGN KEY (student_id) REFERENCES User(student_id)
 );
@@ -20,7 +21,8 @@ CREATE TABLE Reservation (
     idx INT AUTO_INCREMENT,
     student_id CHAR(10) NOT NULL,
     room_number INT NOT NULL,
-    time DATETIME NOT NULL,
+    start_time DATETIME NOT NULL,
+    end_time DATETIME NOT NULL,
     PRIMARY KEY (idx),
     FOREIGN KEY (student_id) REFERENCES User(student_id)
 );

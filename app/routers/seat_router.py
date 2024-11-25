@@ -33,7 +33,8 @@ async def ReserveSeat(request: ReserveSeatRequest ):
     reservation_date = datetime.strptime( request.reservation_date, "%Y-%m-%d %H:%M")
     # get selected seat from DB
     seat_df = getSelectedSeatData(request.seat_number)
-    room_reservation_df = getUserRoomReservation( request.student_id, reservation_date ) #시간 체크 구현 필요
+    room_reservation_df = getUserReservation( request.student_id, reservation_date ) #시간 체크 구현 필요
+    room_reservation2_df = getUserStudyroom( request.student_id, reservation_date )
     seat_reservation_df = getUserSeatReservation( request.student_id )
     # reponse
     if seat_df.empty: 
@@ -41,8 +42,10 @@ async def ReserveSeat(request: ReserveSeatRequest ):
     else :
         if seat_df["is_reserved"].any() == True :
             raise UserError( status_code=409, detail="이미 배정된 좌석입니다") #확인
-        if room_reservation_df.empty == False :
+        if room_reservation_df.empty == False:
             raise UserError( status_code=409, detail="이미 해당 시간에 스터디룸 예약한 상황입니다") # check 필요
+        if room_reservation2_df.empty == False:
+            raise UserError( status_code=409, detail="이미 해당 시간에 스터디룸 예약한 상황입니다")
         if seat_reservation_df.empty == False :
             raise UserError(status_code=409, detail="이미 다른 좌석을 예약한 상황입니다.") #확인
 

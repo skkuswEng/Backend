@@ -27,13 +27,27 @@ def getSelectedSeatData(seat_number: int ):
 
     return seat_df
 
-def getUserRoomReservation( student_id: str, reservation_date: datetime ):
+def getUserReservation( student_id: str, reservation_date: datetime ):
     query = """
         SELECT *
         FROM Reservation
         WHERE student_id = %s
+        AND start_time <= %s
+        AND %s <= end_time;
     """
-    params = (student_id, )
+    params = (student_id, reservation_date, reservation_date )
+    room_reservation_df = pd.read_sql( query, engine, params=params )
+    return room_reservation_df
+
+def getUserStudyroom( student_id: str, reservation_date: datetime ):
+    query = """
+        SELECT *
+        FROM Studyroom
+        WHERE student_id = %s
+        AND start_time <= %s
+        AND %s <= end_time;
+    """
+    params = (student_id, reservation_date, reservation_date )
     room_reservation_df = pd.read_sql( query, engine, params=params )
     return room_reservation_df
 
