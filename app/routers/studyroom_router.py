@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, HTTPException, Request, Depends
 from fastapi.responses import JSONResponse
 
 from ..schemas.studyroom.request import RoomStatusRequest, RoomReservationRequest, GetRoomReservationRequest, ReservationUpdateRequest, ReservationUnreserveRequest
@@ -15,7 +15,7 @@ from typing import Dict
 router = APIRouter()
 
 @router.get("/room/status", response_model=RoomStatusResponse, status_code=200)
-async def get_room_status(queries: RoomStatusRequest):
+async def get_room_status(queries: RoomStatusRequest = Depends()):
     try: 
         date = datetime.strptime(queries.date, "%Y-%m-%d")
     except ValueError:
@@ -94,7 +94,7 @@ async def reserve_studyroom(request: RoomReservationRequest):
 
 # 예약 내역 조회
 @router.get("/room/reservation", response_model=ReservationQueryResponse, status_code=200)
-async def get_reservation_history(queries: GetRoomReservationRequest):
+async def get_reservation_history(queries: GetRoomReservationRequest = Depends()):
     """
     특정 유저가 예약한 스터디룸의 미래 예약 내역을 조회합니다.
     """
