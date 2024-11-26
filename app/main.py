@@ -6,12 +6,13 @@ from .secure.cors import setup_cors
 from .handlers.handler import register_exception_handlers
 
 from .routers.user_router import router as user_router
+from .routers.studyroom_router import router as studyroom_router
+from .routers.seat_router import router as seat_router 
 
 app = FastAPI()
 
 # CORS 설정
 setup_cors(app)
-
 
 # Favicon Static
 # Get rid of favicon.ico 404 Not Found error
@@ -22,6 +23,9 @@ register_exception_handlers(app)
 
 # routers
 app.include_router(user_router)
+app.include_router(studyroom_router)
+app.include_router(seat_router)
+
 
 # root router for testing
 @app.get('/')
