@@ -60,17 +60,9 @@ CREATE TABLE Studyroom (
     idx INT AUTO_INCREMENT,
     student_id CHAR(10) NOT NULL,
     room_number INT NOT NULL,
-    time DATETIME NOT NULL,
-    PRIMARY KEY (idx),
-    FOREIGN KEY (student_id) REFERENCES User(student_id)
-);
-
--- Reservation 테이블 생성
-CREATE TABLE Reservation (
-    idx INT AUTO_INCREMENT,
-    student_id CHAR(10) NOT NULL,
-    room_number INT NOT NULL,
-    time DATETIME NOT NULL,
+    start_time DATETIME NOT NULL,
+    end_time DATETIME NOT NULL,
+    is_leader BOOLEAN NOT NULL,
     PRIMARY KEY (idx),
     FOREIGN KEY (student_id) REFERENCES User(student_id)
 );
@@ -92,7 +84,7 @@ CREATE TABLE Seat (
 **절대로 INSERT문 과 같은 직접적인 sql문으로 데이터베이스에 데이터를 넣어주시지 말기 바랍니다!!**
 
 #### ERD 
-![ERD of DB](static/images/ERD.png)
+![ERD of DB](static/images/ERD_ver2.png)
 
 ## 필요한 pip 패키지 설치
 
