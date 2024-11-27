@@ -23,3 +23,5 @@ class SeatReservedSearchResponse(ResponseModel):
 
 class SeatUnreserveResponse(ResponseModel):
     message: str
+class SeatRenewResponse(ResponseModel):
+    message: str
