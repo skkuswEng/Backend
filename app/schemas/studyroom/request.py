@@ -14,16 +14,11 @@ class CompanionData(BaseModel):
     student_id: str                         # 동반 이용자 학번
     name: str                               # 동반 이용자 이름
 
-class ReserveTime(BaseModel):
-    startTime: str                          # 예약 시작 시간
-    endTime: str                            # 예약 종료 시간
-
 class RoomReservationRequest(RequestModel):
     student_id: str                         # 대표자 학생
     room_id: int                            # 방 번호
-    start_time: str                         # 예약 날짜 (ISOString, e.g., "2024-11-21")
-    end_time: str                           # 예약 날짜 (ISOString, e.g., "2024-11-21")
-    reserve_time: ReserveTime               # 예약 시간
+    start_time: str                         # 예약 날짜 (ISOString, e.g., "2024-11-21T10:00:00")
+    end_time: str                           # 예약 날짜 (ISOString, e.g., "2024-11-21T12:00:00")  
     companion: List[CompanionData]          # 동반 이용자 리스트
 
 class GetRoomReservationRequest(RequestModel):
@@ -32,11 +27,14 @@ class GetRoomReservationRequest(RequestModel):
 class ReservationUpdateRequest(BaseModel):
     student_id: int  # 대표자
     room_number: int  # 1 | 2 | 3
-    startDate: str  # ISOString
-    endDate: str  # ISOString
+    start_time: str  # ISOString
+    end_time: str  # ISOString
+    modified_start_time: str  # ISOString
+    modified_end_time: str  # ISOString
     companion: List[CompanionData]
 
 class ReservationUnreserveRequest(BaseModel):
     student_id: int  # 요청한 사람 (대표자)
+    room_number: int # 1 | 2 | 3
     startDate: str  # ISOString
     endDate: str  # ISOString
