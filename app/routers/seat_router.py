@@ -121,8 +121,8 @@ async def renewSeat( request: SeatRenewRequest ):
             token_df = searchStudentToken(row["student_id"])
             #push_request to FCM
             push_request = PushNotificationRequest(
-                title="Return seat notification",
-                body="Your reservation has been returned automatically",
+                title="Sokk 좌석 자동 반납 알림",
+                body="장기간 자리를 비워 좌석이 자동 반납되었습니다",
                 fcm_token= token_df.fcm_token.iloc[0]
             )
             result = await send_push_notification(push_request)
