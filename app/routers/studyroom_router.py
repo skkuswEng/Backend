@@ -149,7 +149,7 @@ async def update_reservation(request: ReservationUpdateRequest):
 
 
 @router.delete("/room/unreserve", response_model=ReservationUnreserveResponse, status_code=200)
-async def delete_reservation(request: ReservationUnreserveRequest):
+async def delete_reservation(request: ReservationUnreserveRequest = Depends()):
     """
     예약 내용을 취소하는 API.
     """
