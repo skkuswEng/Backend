@@ -101,12 +101,12 @@ async def renewSeat( request: SeatRenewRequest ):
             renewCountRst = addSeatCount( seat.seat_number )
         
         if renewCountRst["result"] == False:
-            raise userError(status_code=409, detail="좌석 갱신 중 db 에러")
+            raise UserError(status_code=409, detail="좌석 갱신 중 db 에러")
     
     
     returnSeatRst = returnSeat()
     if returnSeatRst["result"] == False:
-            raise userError(status_code=409, detail="좌석 자동 반납 중 db 에러")
+            raise UserError(status_code=409, detail="좌석 자동 반납 중 db 에러")
     return SeatRenewResponse(
         message="Renew complete"
     )

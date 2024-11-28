@@ -8,7 +8,7 @@ from .handlers.handler import register_exception_handlers
 from .routers.user_router import router as user_router
 from .routers.studyroom_router import router as studyroom_router
 from .routers.seat_router import router as seat_router 
-
+from .routers.auth_router import router as auth_router
 app = FastAPI()
 
 # CORS 설정
@@ -25,6 +25,7 @@ register_exception_handlers(app)
 app.include_router(user_router)
 app.include_router(studyroom_router)
 app.include_router(seat_router)
+app.include_router(auth_router)
 
 
 # root router for testing

@@ -1,0 +1,7 @@
+from pydantic import BaseModel
+from app.schemas.base_schema import RequestModel
+from typing import Optional
+
+class registerAuthtokenRequest(RequestModel):
+    student_id: str
+    token: str

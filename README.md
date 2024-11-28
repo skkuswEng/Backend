@@ -77,6 +77,14 @@ CREATE TABLE Seat (
     PRIMARY KEY (seat_number),
     FOREIGN KEY (student_id) REFERENCES User(student_id)
 );
+
+CREATE TABLE FCMToken(
+    token_id INT AUTO_INCREMENT PRIMARY KEY,
+    student_id CHAR(10) NOT NULL,
+    fcm_token VARCHAR(255) NOT NULL,
+    created_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (student_id) REFERENCES User(student_id)
+)
 ```
 
 이후 데이터 삽입은 INSERT문 을 사용할 필요 없이, Frontend에서 구현한 기능과 Backend에서의 라우터를 이용하여 데이터 삽입해주시면 됩니다. 
