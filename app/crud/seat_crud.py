@@ -27,13 +27,27 @@ def getSelectedSeatData(seat_number: int ):
 
     return seat_df
 
-def getUserRoomReservation( student_id: str, reservation_date: datetime ):
+def getUserReservation( student_id: str, reservation_date: datetime ):
     query = """
         SELECT *
         FROM Reservation
         WHERE student_id = %s
+        AND start_time <= %s
+        AND %s <= end_time;
     """
-    params = (student_id, )
+    params = (student_id, reservation_date, reservation_date )
+    room_reservation_df = pd.read_sql( query, engine, params=params )
+    return room_reservation_df
+
+def getUserStudyroom( student_id: str, reservation_date: datetime ):
+    query = """
+        SELECT *
+        FROM Studyroom
+        WHERE student_id = %s
+        AND start_time <= %s
+        AND %s <= end_time;
+    """
+    params = (student_id, reservation_date, reservation_date )
     room_reservation_df = pd.read_sql( query, engine, params=params )
     return room_reservation_df
 
@@ -107,4 +121,94 @@ def unreserveSeat( seat_number: int ):
                 "result": False,
                 "error": f"좌석 반납 중 에러 발생: {str(e)}"
             }
+def addSeatCount( seat_number: int):
+    with Session(engine) as session:
+        try:
+            renewSeat_query = """
+                UPDATE Seat
+                SET 
+                    count = count + 1
+                WHERE 
+                    seat_number = :seat_number
+                    AND is_reserved = TRUE;
+            """
+            session.execute(
+                text(renewSeat_query),
+                { "seat_number": seat_number }
+            )
+            session.commit()
             
+            return {
+                "result": True,
+                "message" : "좌석 갱신 성공"
+            }
+        except Exception as e:
+            session.rollback()
+            return{
+                "result": False,
+                "error": f"좌석 갱신 중 에러 발생: {str(e)}"
+            }
+            
+def resetSeatCount( seat_number: int):
+    with Session(engine) as session:
+        try:
+            renewSeat_query = """
+                UPDATE Seat
+                SET 
+                    count = 0
+                WHERE 
+                    seat_number = :seat_number
+                    AND is_reserved = TRUE;
+            """
+            session.execute(
+                text(renewSeat_query),
+                { "seat_number": seat_number }
+            )
+            session.commit()
+            
+            return {
+                "result": True,
+                "message" : "좌석 갱신 성공"
+            }
+        except Exception as e:
+            session.rollback()
+            return{
+                "result": False,
+                "error": f"좌석 갱신 중 에러 발생: {str(e)}"
+            }
+            
+def returnSeat():
+    with Session(engine) as session:
+        try:
+            renewSeat_query = """
+                UPDATE Seat
+                SET 
+                    student_id = NULL,
+                    time = NULL,
+                    is_reserved = FALSE,
+                    count = 0
+                WHERE 
+                    is_reserved = TRUE
+                    AND count >= 20;
+            """
+            result = session.execute(
+                text(renewSeat_query),
+            )
+            session.commit()
+            
+            if result.rowcount == 0:
+                return {
+                    "result": True,
+                    "message" : "자동 반납할 좌석 없음"
+                }
+            else :
+                return {
+                    "result": True,
+                    "message" : "좌석 자동 반납 성공"
+                }
+        except Exception as e:
+            session.rollback()
+            return{
+                "result": False,
+                "error": f"좌석 자동 반납 중 에러 발생: {str(e)}"
+            }

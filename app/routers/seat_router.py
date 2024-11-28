@@ -33,7 +33,7 @@ async def ReserveSeat(request: ReserveSeatRequest ):
     reservation_date = datetime.strptime( request.reservation_date, "%Y-%m-%d %H:%M")
     # get selected seat from DB
     seat_df = getSelectedSeatData(request.seat_number)
-    room_reservation_df = getUserRoomReservation( request.student_id, reservation_date ) #시간 체크 구현 필요
+    room_reservation_df = getUserStudyroom( request.student_id, reservation_date )
     seat_reservation_df = getUserSeatReservation( request.student_id )
     # reponse
     if seat_df.empty: 
@@ -41,14 +41,14 @@ async def ReserveSeat(request: ReserveSeatRequest ):
     else :
         if seat_df["is_reserved"].any() == True :
             raise UserError( status_code=409, detail="이미 배정된 좌석입니다") #확인
-        if room_reservation_df.empty == False :
-            raise UserError( status_code=409, detail="이미 해당 시간에 스터디룸 예약한 상황입니다") # check 필요
+        if room_reservation_df.empty == False:
+            raise UserError( status_code=409, detail="이미 해당 시간에 스터디룸 예약한 상황입니다") #확인 
         if seat_reservation_df.empty == False :
             raise UserError(status_code=409, detail="이미 다른 좌석을 예약한 상황입니다.") #확인
 
         result = reserveSeat( request.student_id, request.seat_number, request.reservation_date )
         
-        if result == False:
+        if result["result"] == False:
             raise UserError( status_code=500, detail="좌석 배정 중 db 오류")
         return SeatReserveResponse(
             message= "Reservation Complete"
@@ -83,7 +83,7 @@ async def UnreserveSeat( request: UnreserveSeatRequest ):
     #print( "req: ", request.seat_number )
     if int(seat_reservation_df.seat_number) == request.seat_number :
         result = unreserveSeat( request.seat_number )
-        if result == False :
+        if result["result"] == False :
             raise UserError(status_code=409, detail="좌석 반납중 서버 DB에서 에러 발생")
         else :
             return SeatUnreserveResponse(
@@ -91,3 +91,22 @@ async def UnreserveSeat( request: UnreserveSeatRequest ):
             )
     else:
         raise UserError( status_code=400, detail="요청 오류 있음")
+    
+@router.post("/seat/renew", response_model=SeatRenewResponse )
+async def renewSeat( request: SeatRenewRequest ):
+    for seat in request.seats:
+        if seat.seat_status == "Occupied" :
+            renewCountRst = resetSeatCount( seat.seat_number )
+        else:
+            renewCountRst = addSeatCount( seat.seat_number )
+        
+        if renewCountRst["result"] == False:
+            raise userError(status_code=409, detail="좌석 갱신 중 db 에러")
+    
+    
+    returnSeatRst = returnSeat()
+    if returnSeatRst["result"] == False:
+            raise userError(status_code=409, detail="좌석 자동 반납 중 db 에러")
+    return SeatRenewResponse(
+        message="Renew complete"
+    )
