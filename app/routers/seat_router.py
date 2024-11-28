@@ -85,7 +85,7 @@ async def UnreserveSeat( request: UnreserveSeatRequest ):
     
     #print( "df: ", int( seat_reservation_df.seat_number ) )
     #print( "req: ", request.seat_number )
-    if int(seat_reservation_df.seat_number) == request.seat_number :
+    if seat_reservation_df.seat_number.iloc[0] == request.seat_number :
         result = unreserveSeat( request.seat_number )
         if result["result"] == False :
             raise UserError(status_code=409, detail="좌석 반납중 서버 DB에서 에러 발생")
