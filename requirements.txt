@@ -2,6 +2,7 @@ annotated-types==0.7.0
 anyio==4.6.2.post1
 click==8.1.7
 fastapi==0.115.3
+firebase-admin==6.6.0
 h11==0.14.0
 idna==3.10
 numpy==2.1.3

@@ -180,6 +180,16 @@ def resetSeatCount( seat_number: int):
 def returnSeat():
     with Session(engine) as session:
         try:
+            # 선택 row 조희
+            select_query = """
+                SELECT *
+                FROM Seat
+                WHERE is_reserved = TRUE
+                AND count >= 20;
+            """
+            rows_df = session.execute(text(select_query)).mappings().all()
+            
+            # Update 
             renewSeat_query = """
                 UPDATE Seat
                 SET 
@@ -199,12 +209,23 @@ def returnSeat():
             if result.rowcount == 0:
                 return {
                     "result": True,
-                    "message" : "자동 반납할 좌석 없음"
+                    "message" : "자동 반납할 좌석 없음",
+                    "rowcount": 0
                 }
             else :
+                rows = [
+                    {
+                        "seat_number": row["seat_number"],
+                        "student_id": row["student_id"]
+                    }
+                    for row in rows_df
+                ]
+                
                 return {
                     "result": True,
-                    "message" : "좌석 자동 반납 성공"
+                    "message" : "좌석 자동 반납 성공",
+                    "rowcount" : result.rowcount,
+                    "rows" : rows
                 }
         except Exception as e:
             session.rollback()
