@@ -21,17 +21,14 @@ async def get_room_status(queries: RoomStatusRequest = Depends()):
     except ValueError:
         raise HTTPException(status_code=400, detail="ISO 형식의 날짜가 아닙니다. YYYY-MM-DD 형식으로 보내주세요")
     
-    if queries.room_id not in [1, 2, 3]: # 방 번호 검증
+    if queries.room_id not in [1, 2, 3]:  # 방 번호 검증
         raise HTTPException(status_code=400, detail="room_id가 잘못 되었습니다. 1, 2, 3만 가능합니다.")
     
-    # 하루의 시작/ 끝 시간 설정 (08:00 ~ 22:00)
+    # 하루의 시작/끝 시간 설정 (08:00 ~ 22:00)
     start_time = datetime(date.year, date.month, date.day, 8, 0, 0)
     end_time = datetime(date.year, date.month, date.day, 22, 0, 0)
 
     timetable = get_room_time(queries.room_id, start_time, end_time)
-
-    # 예약된 시간대를 추출 (HH:MM 형식으로 변환)
-    reserved_slots = set(res[0].strftime("%H:%M") for res in timetable)
 
     # 30분 간격으로 모든 시간대 생성
     time_slots: Dict[str, bool] = {}
@@ -40,7 +37,7 @@ async def get_room_status(queries: RoomStatusRequest = Depends()):
         time_str = current_time.strftime("%H:%M")
         # 현재 시간대가 예약된 시간대에 포함되어 있는지 확인
         time_slots[time_str] = any(
-            res_start <= current_time < res_end for res_start, res_end in reserved_slots
+            res_start <= current_time < res_end for res_start, res_end in timetable
         )
         current_time += timedelta(minutes=30)  # 30분 간격 추가
 
