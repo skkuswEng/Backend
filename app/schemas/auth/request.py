@@ -5,3 +5,8 @@ from typing import Optional
 class registerAuthtokenRequest(RequestModel):
     student_id: str
     token: str
+    
+class PushNotificationRequest(BaseModel):
+    title: str
+    body: str
+    fcm_token: str

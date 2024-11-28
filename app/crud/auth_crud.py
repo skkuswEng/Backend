@@ -33,3 +33,13 @@ def registerAuthTokenDB( student_id: str, token: str ):
                 "result": False,
                 "error": f"토큰 등록 중 에러 발생: {str(e)}"
             }
+
+def searchStudentToken( student_id: str ):
+    query = """
+        SELECT *
+        FROM FCMToken
+        WHERE student_id = %s
+    """
+    
+    params = (student_id,)
+    token_df = pd.
