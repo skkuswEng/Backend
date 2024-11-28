@@ -182,12 +182,12 @@ def returnSeat():
         try:
             # 선택 row 조희
             select_query = """
-                SELCT *
+                SELECT *
                 FROM Seat
                 WHERE is_reserved = TRUE
                 AND count >= 20;
             """
-            rows_df = session.execute(text(select_query)).fetchall()
+            rows_df = session.execute(text(select_query)).mappings().all()
             
             # Update 
             renewSeat_query = """
@@ -215,8 +215,8 @@ def returnSeat():
             else :
                 rows = [
                     {
-                        "seat_number": row.seat_number,
-                        "student_id": row.student_id
+                        "seat_number": row["seat_number"],
+                        "student_id": row["student_id"]
                     }
                     for row in rows_df
                 ]

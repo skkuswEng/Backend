@@ -15,7 +15,7 @@ from firebase_admin import credentials, messaging
 router = APIRouter()
 
 #Firbase amdin sdk
-cred = credentials.Certificate("")
+cred = credentials.Certificate("app/secure/sokk-82ce3-firebase-adminsdk-ajvfn-2b4d13b4ef.json")
 firebase_admin.initialize_app(cred)
 
 @router.post("/auth/message-token", response_model=registerAuthTokenResponse )
@@ -41,6 +41,11 @@ async def send_push_notification( request: PushNotificationRequest ):
         )
 
         response = messaging.send(message)
-        return {"message": "Notification sent successfully", "response_id": response}
+
+        return {
+            "message": "Notification sent successfully",
+            "response_id": response
+            }
     except Exception as e:
+        print( f"{str(e)}")
         raise UserError(status_code=500, detail=f"Failed to send notification: {str(e)}")

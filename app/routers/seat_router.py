@@ -10,8 +10,8 @@ from ..crud.seat_crud import *
 
 from datetime import datetime, timedelta
 
-from auth_router import send_push_notification
-from ..curd.auth_crud import *
+from .auth_router import send_push_notification
+from ..crud.auth_crud import *
 from ..schemas.auth.request import *
 
 router = APIRouter()
@@ -112,15 +112,21 @@ async def renewSeat( request: SeatRenewRequest ):
     if returnSeatRst["result"] == False:
             raise UserError(status_code=409, detail="좌석 자동 반납 중 db 에러")
     
-    if returnSeatRst["rowcount"] == 0:
-    else :
+    if returnSeatRst["rowcount"] > 0 :
+        #Seat data 
         rows_data = returnSeatRst["rows"]
+        
         for row in rows_data:
+            #Get student's token
+            token_df = searchStudentToken(row["student_id"])
+            #push_request to FCM
             push_request = PushNotificationRequest(
                 title="Return seat notification",
                 body="Your reservation has been returned automatically",
-                fcm_token=
+                fcm_token= token_df.fcm_token.iloc[0]
             )
+            result = await send_push_notification(push_request)
+            print( f" result in seat_router: {result}")
     return SeatRenewResponse(
         message="Renew complete"
     )

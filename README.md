@@ -80,7 +80,7 @@ CREATE TABLE Seat (
 
 CREATE TABLE FCMToken(
     token_id INT AUTO_INCREMENT PRIMARY KEY,
-    student_id CHAR(10) NOT NULL,
+    student_id CHAR(10) NOT NULL UNIQUE,
     fcm_token VARCHAR(255) NOT NULL,
     created_date DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (student_id) REFERENCES User(student_id)

@@ -13,9 +13,13 @@ def registerAuthTokenDB( student_id: str, token: str ):
         try:
             # 여러 기기 가능성 고려, 한명이 여러 토큰 가질 수 있음.
             registerToken_query = """
-                INSERT INTO FCMToken( student_id, fcm_token) VALUES(
+                INSERT INTO FCMToken( student_id, fcm_token)
+                VALUES(
                     :student_id, :token
-                );
+                )
+                ON DUPLICATE KEY UPDATE
+                fcm_token = VALUES(fcm_token),
+                created_date = CURRENT_TIMESTAMP;
             """
             session.execute(
                 text(registerToken_query),
@@ -42,4 +46,5 @@ def searchStudentToken( student_id: str ):
     """
     
     params = (student_id,)
-    token_df = pd.
+    token_df = pd.read_sql( query, engine, params=params )
+    return token_df
